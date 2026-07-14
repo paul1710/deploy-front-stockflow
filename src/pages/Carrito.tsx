@@ -2,6 +2,14 @@ import { useNavigate } from 'react-router-dom';
 import { useCart } from '../hooks/useCart';
 import Button from '../components/Button';
 
+const toDisplayPrice = (value: number | string | null | undefined) => {
+  const parsed = typeof value === 'string' ? Number(value) : value;
+  if (typeof parsed !== 'number' || Number.isNaN(parsed)) {
+    return 0;
+  }
+  return parsed;
+};
+
 export default function Carrito() {
   const navigate = useNavigate();
   const { items, updateQuantity, removeItem, clearCart, total, totalItems } = useCart();
@@ -51,7 +59,7 @@ export default function Carrito() {
                       </span>
                     </div>
                   </td>
-                  <td className="p-2">${item.producto.precio.toFixed(2)}</td>
+                  <td className="p-2">${toDisplayPrice(item.producto.precio).toFixed(2)}</td>
                   <td className="p-2">
                     <div className="flex items-center gap-2">
                       <button 
@@ -69,7 +77,7 @@ export default function Carrito() {
                       </button>
                     </div>
                   </td>
-                  <td className="p-2">${(item.producto.precio * item.cantidad).toFixed(2)}</td>
+                  <td className="p-2">${(toDisplayPrice(item.producto.precio) * item.cantidad).toFixed(2)}</td>
                   <td className="p-2">
                     <button 
                       onClick={() => removeItem(item.producto.id)}
@@ -91,7 +99,7 @@ export default function Carrito() {
           </div>
           <div className="flex justify-between mb-4 font-bold text-lg">
             <span>Total:</span>
-            <span>${total.toFixed(2)}</span>
+            <span>${toDisplayPrice(total).toFixed(2)}</span>
           </div>
           <div className="flex flex-col gap-2">
             <Button onClick={() => navigate('/checkout')} className="w-full">Proceder al Checkout</Button>
